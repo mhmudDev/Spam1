@@ -26,7 +26,6 @@ client.on('message', message => {
   if (command == "say") {
 if(!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send('?|**\`ADMINISTRATOR\`ليس لديك صلاحيات`**');
    message.channel.sendMessage(args.join("  "))
-   message.delete()
   }
  });
 

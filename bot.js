@@ -1,33 +1,46 @@
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 const client = new Discord.Client();
-var prefix = "1";
+const Enmap = require(`enmap`);
+const farm = new Enmap();
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);  
+  console.log(`Logged in as ${client.user.tag}!`);
+});
+function randomIntFromInterval(min,max){
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+client.on('message', msg => {
+    let ownerid = '510806759565295619';
+    if(msg.author.id === ownerid){
+        if(msg.content === "farm"){
+            if(msg.channel.id !== "510806759565295619") return;
+            let count = 0;
+            farm.set(`farm`, 'true')
+            setInterval(function(){
+                setTimeout(function(){
+                    if(farm.get(`farm`) !== 'true') return;
+                    count++;
+                    msg.channel.send(`${randomIntFromInterval(1135,1234)}${randomIntFromInterval(1135,1334)}${randomIntFromInterval(1135,1534)} #${count}`)
+                }, randomIntFromInterval(250, 300))
+            }, randomIntFromInterval(1119, 2119))
+        }
+        if(msg.content.startsWith(`credits`)){
+            if(msg.channel.id !== "510151528254930966") return;
+            if(msg.isMentioned(client.user)){
+                farm.set(`farm`, 'blah blah')
+                let args = msg.content.split(` `)
+                msg.channel.send(`#credits <@!${msg.author.id}> ${args[2]}`).then(()=>{
+                    const filter = m => m.author.id === msg.author.id;
+                    msg.channel.awaitMessages(filter, {max: 1, time: 29000}).then(col=>{
+                        if(col.first().content === "cancel"){
+                            return msg.reply(`Canceled!`);
+                        }
+                        msg.channel.send(`${col.first().content}`).then(()=> farm.set(`farm`, 'true'))
+                    })
+                })
+            }
+        }
+    }
 });
 
-client.on('ready', async() => {
-var server = "510151527663665154"; // ايدي السررفر
-var channel = "510806759565295619";//ايدي الروم
-    setInterval(()=>{
-    client.guilds.get(server).channels.get(channel).send('**محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود  محمود**')
-    },305);
-})
-
-client.on('message', message => {
-  if (message.author.bot) return;
-  if (!message.content.startsWith(prefix)) return;
-
-  let command = message.content.split(" ")[0];
-  command = command.slice(prefix.length);
-
-  let args = message.content.split(" ").slice(1);
-
-  if (command == "say") {
-if(!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send('?|**\`ADMINISTRATOR\`ليس لديك صلاحيات`**');
-   message.channel.sendMessage(args.join(" "))
-  }
- });
-
- 
-client.login(process.env.BOT_TOKEN);
+client.login("token");
